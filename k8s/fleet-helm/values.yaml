@@ -1,0 +1,31 @@
+replicaCount: 1
+
+image:
+  repository: fleetdm/fleet
+  tag: HEAD
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 80
+
+ingress:
+  enabled: true
+  className: "nginx"
+  host: fleet.local
+  path: /
+  pathType: Prefix
+
+env:
+  FLEET_MYSQL_USERNAME: fleet
+  FLEET_MYSQL_DATABASE: fleet
+  FLEET_MYSQL_ADDRESS: mysql.fleet.svc.cluster.local:3306
+  FLEET_REDIS_ADDRESS: redis.fleet.svc.cluster.local:6379
+  FLEET_SERVER_ADDRESS: 0.0.0.0:8080
+  FLEET_SERVER_TLS: "false"
+  FLEET_OSQUERY_TLS_DISABLE: "true"
+  FLEET_MDM_ENABLE: "false"
+  FLEET_DISABLE_UPDATES: "true"
+  FLEET_APP_TOKEN_KEY: mytokensecret123456789
+
+resources: {}

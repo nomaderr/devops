@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fleet
+  namespace: fleet
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fleet
+  template:
+    metadata:
+      labels:
+        app: fleet
+    spec:
+      containers:
+        - name: fleet
+          image: fleetdm/fleet:HEAD
+          ports:
+            - containerPort: 8080
+          command: ["fleet"]
+          args: ["serve"]
+          env:
+            - name: FLEET_MYSQL_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-secret
+                  key: MYSQL_USER
+            - name: FLEET_MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-secret
+                  key: MYSQL_PASSWORD
+            - name: FLEET_MYSQL_DATABASE
+              value: fleet
+            - name: FLEET_MYSQL_ADDRESS
+              value: mysql:3306
+            - name: FLEET_REDIS_ADDRESS
+              value: redis:6379
+            - name: FLEET_SERVER_ADDRESS
+              value: 0.0.0.0:8080
+            - name: FLEET_SERVER_TLS
+              value: "false" # вместо --no-tls
+            - name: FLEET_OSQUERY_TLS_DISABLE
+              value: "true"
+            - name: FLEET_MDM_ENABLE
+              value: "false"
+            - name: FLEET_DISABLE_UPDATES
+              value: "true"
+            - name: FLEET_APP_TOKEN_KEY
+              value: "mytokensecret123456789"
+          livenessProbe:
+            tcpSocket:
+              port: 8080
+            initialDelaySeconds: 30
+            periodSeconds: 10
+
+          readinessProbe:
+            httpGet:
+              path: /login
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            timeoutSeconds: 2
+            failureThreshold: 3

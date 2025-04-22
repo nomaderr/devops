@@ -1,0 +1,52 @@
+namespace: dev
+
+image:
+  repository: fleetdm/fleet
+  tag: HEAD
+  pullPolicy: IfNotPresent
+
+mysql:
+  image: mysql:8.0
+  rootPassword: toor
+  user: fleet
+  password: insecure
+  database: fleet
+  pvc:
+    size: 1Gi
+
+redis:
+  image: redis:5
+
+fleet:
+  replicas: 1
+  serverAddress: "0.0.0.0:8080"
+  serverTLS: "false"
+  osqueryTLSDisable: "true"
+  mdmEnable: "false"
+  disableUpdates: "true"
+  appTokenKey: "mytokensecret123456789"
+  livenessProbe:
+    tcpSocket:
+      port: 8080
+    initialDelaySeconds: 30
+    periodSeconds: 10
+  readinessProbe:
+    httpGet:
+      path: /login
+      port: 8080
+    initialDelaySeconds: 10
+    periodSeconds: 5
+    timeoutSeconds: 2
+    failureThreshold: 3
+
+ingress:
+  enabled: true
+  className: nginx
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+  hosts:
+    - host: fleet.local
+      paths:
+        - path: /
+          pathType: Prefix
+  tls: [] 

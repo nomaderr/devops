@@ -1,0 +1,69 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "fleet.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ .Release.Name }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - containerPort: 8080
+          command: ["fleet"]
+          args: ["serve"]
+          env:
+            - name: FLEET_MYSQL_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-secret
+                  key: MYSQL_USER
+            - name: FLEET_MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-secret
+                  key: MYSQL_PASSWORD
+            - name: FLEET_MYSQL_DATABASE
+              value: {{ .Values.env.FLEET_MYSQL_DATABASE }}
+            - name: FLEET_MYSQL_ADDRESS
+              value: {{ .Values.env.FLEET_MYSQL_ADDRESS }}
+            - name: FLEET_REDIS_ADDRESS
+              value: {{ .Values.env.FLEET_REDIS_ADDRESS }}
+            - name: FLEET_SERVER_ADDRESS
+              value: {{ .Values.env.FLEET_SERVER_ADDRESS }}
+            - name: FLEET_SERVER_TLS
+              value: {{ .Values.env.FLEET_SERVER_TLS | quote }}
+            - name: FLEET_OSQUERY_TLS_DISABLE
+              value: {{ .Values.env.FLEET_OSQUERY_TLS_DISABLE | quote }}
+            - name: FLEET_MDM_ENABLE
+              value: {{ .Values.env.FLEET_MDM_ENABLE | quote }}
+            - name: FLEET_DISABLE_UPDATES
+              value: {{ .Values.env.FLEET_DISABLE_UPDATES | quote }}
+            - name: FLEET_APP_TOKEN_KEY
+              value: {{ .Values.env.FLEET_APP_TOKEN_KEY }}
+
+          livenessProbe:
+            tcpSocket:
+              port: 8080
+            initialDelaySeconds: 30
+            periodSeconds: 10
+
+          readinessProbe:
+            httpGet:
+              path: /login
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            timeoutSeconds: 2
+            failureThreshold: 3

@@ -1,0 +1,30 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: fleet-db-init
+  namespace: fleet
+spec:
+  template:
+    spec:
+      containers:
+        - name: fleet-init
+          image: fleetdm/fleet:HEAD
+          command: ["fleet", "prepare", "db"]
+          env: # те же ENV что и у основного pod
+            - name: FLEET_MYSQL_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-secret
+                  key: MYSQL_USER
+            - name: FLEET_MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-secret
+                  key: MYSQL_PASSWORD
+            - name: FLEET_MYSQL_DATABASE
+              value: fleet
+            - name: FLEET_MYSQL_ADDRESS
+              value: mysql:3306
+            - name: FLEET_REDIS_ADDRESS
+              value: redis:6379
+      restartPolicy: OnFailure

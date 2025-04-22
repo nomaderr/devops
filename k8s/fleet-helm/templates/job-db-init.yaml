@@ -1,0 +1,35 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ .Release.Name }}-db-init
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ .Release.Name }}
+spec:
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}
+    spec:
+      restartPolicy: OnFailure
+      containers:
+        - name: fleet-init
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          command: ["fleet", "prepare", "db"]
+          env:
+            - name: FLEET_MYSQL_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.secrets.mysql.name }}
+                  key: {{ .Values.secrets.mysql.userKey }}
+            - name: FLEET_MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.secrets.mysql.name }}
+                  key: {{ .Values.secrets.mysql.passwordKey }}
+            - name: FLEET_MYSQL_DATABASE
+              value: {{ .Values.database.name }}
+            - name: FLEET_MYSQL_ADDRESS
+              value: {{ .Values.database.address }}
+            - name: FLEET_REDIS_ADDRESS
+              value: {{ .Values.redis.address }}
