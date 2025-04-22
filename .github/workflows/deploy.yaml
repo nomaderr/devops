@@ -3,29 +3,29 @@ name: Deploy to Kubernetes
 on:
   push:
     branches:
-      - main  
+      - main
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-    - name: Set up Kubeconfig from Secret
-      run: |
-        mkdir -p ~/.kube
-        echo "${{ secrets.K8S }}" > ~/.kube/config
-        chmod 600 ~/.kube/config
+      - name: Decode and write Kubeconfig
+        run: |
+          mkdir -p ~/.kube
+          echo "${{ secrets.K8S_B64 }}" | base64 -d > ~/.kube/config
+          chmod 600 ~/.kube/config
 
-    - name: Set up Helm
-      uses: azure/setup-helm@v3
-      with:
-        version: v3.13.3 
+      - name: Set up Helm
+        uses: azure/setup-helm@v3
+        with:
+          version: v3.13.3
 
-    - name: Deploy with Helm
-      run: |
-        helm upgrade --install fleet ./k8s/fleet-helm \
-          --namespace fleet --create-namespace \
-          -f ./k8s/fleet-helm/values/dev.yaml
+      - name: Deploy to Kubernetes
+        run: |
+          helm upgrade --install fleet ./k8s/fleet-helm \
+            --namespace fleet --create-namespace \
+            -f ./k8s/fleet-helm/values/dev.yaml
