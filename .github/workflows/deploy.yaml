@@ -2,43 +2,39 @@ name: Deploy to GKE
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
 
 jobs:
   deploy:
-    name: Deploy to GKE
+    name: Deploy via Helm to GKE
     runs-on: ubuntu-latest
 
     permissions:
-      contents: 'read'
-      id-token: 'write'  # для Workload Identity Federation
+      id-token: write
+      contents: read
 
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Authenticate to Google Cloud
-        id: auth
+      - name: Authenticate to Google Cloud via Workload Identity Federation
         uses: google-github-actions/auth@v2
         with:
           workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
           service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
 
-      - name: Setup gcloud SDK
+      - name: Set up gcloud CLI
         uses: google-github-actions/setup-gcloud@v2
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
 
       - name: Get GKE credentials
         run: |
-          gcloud container clusters get-credentials "$GKE_CLUSTER_NAME" \
-            --zone "$GKE_CLUSTER_ZONE" \
-            --project "$GCP_PROJECT_ID"
-        env:
-          GKE_CLUSTER_NAME: ${{ secrets.GKE_CLUSTER_NAME }}
-          GKE_CLUSTER_ZONE: ${{ secrets.GKE_CLUSTER_ZONE }}
-          GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+          gcloud container clusters get-credentials ${{ secrets.GKE_CLUSTER_NAME }} \
+            --zone ${{ secrets.GKE_CLUSTER_ZONE }} \
+            --project ${{ secrets.GCP_PROJECT_ID }}
 
-      - name: Setup Helm
+      - name: Set up Helm
         uses: azure/setup-helm@v3
 
       - name: Deploy with Helm
