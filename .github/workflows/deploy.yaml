@@ -15,7 +15,7 @@ jobs:
       - name: Set up Kubeconfig from secret
         run: |
           mkdir -p ~/.kube
-          echo "${{ secrets.K8S_B64 }}" | base64 -d > ~/.kube/config
+          echo "${{ secrets.K8S }}" | base64 -d > ~/.kube/config
           chmod 600 ~/.kube/config
 
       - name: Set up Helm
