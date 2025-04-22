@@ -1,23 +1,18 @@
-# .github/workflows/deploy.yaml
-name: Deploy to GKE via Workload Identity Federation
+name: Deploy to GKE
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
 
 permissions:
-  id-token: write
   contents: read
+  id-token: write
 
 jobs:
   deploy:
-    name: Deploy with Helm to GKE
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v2
@@ -25,7 +20,7 @@ jobs:
           workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
           service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
 
-      - name: Setup gcloud CLI
+      - name: Setup gcloud
         uses: google-github-actions/setup-gcloud@v2
         with:
           project_id: ${{ secrets.GCP_PROJECT_ID }}
@@ -42,6 +37,5 @@ jobs:
       - name: Deploy with Helm
         run: |
           helm upgrade --install fleet ./k8s/fleet-helm \
-            --namespace fleet \
-            --create-namespace \
+            --namespace fleet --create-namespace \
             -f ./k8s/fleet-helm/values/dev.yaml
