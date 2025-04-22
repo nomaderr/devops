@@ -1,44 +1,55 @@
-name: Deploy to GKE
+name: Deploy FleetDM to GKE via Helm
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
+
+env:
+  PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+  CLUSTER_NAME: ${{ secrets.GKE_CLUSTER_NAME }}
+  CLUSTER_ZONE: ${{ secrets.GKE_CLUSTER_ZONE }}
+  SERVICE_ACCOUNT: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+  WORKLOAD_IDENTITY_PROVIDER: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
 
 jobs:
   deploy:
-    name: Deploy via Helm to GKE
+    name: Deploy FleetDM Helm Chart
     runs-on: ubuntu-latest
 
     permissions:
-      id-token: write
       contents: read
+      id-token: write
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      - name: Authenticate to Google Cloud via Workload Identity Federation
+      - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v2
         with:
-          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
-          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+          workload_identity_provider: ${{ env.WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ env.SERVICE_ACCOUNT }}
 
-      - name: Set up gcloud CLI
+      - name: Set up gcloud SDK
         uses: google-github-actions/setup-gcloud@v2
         with:
-          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          project_id: ${{ env.PROJECT_ID }}
 
       - name: Get GKE credentials
-        run: |
-          gcloud container clusters get-credentials ${{ secrets.GKE_CLUSTER_NAME }} \
-            --zone ${{ secrets.GKE_CLUSTER_ZONE }} \
-            --project ${{ secrets.GCP_PROJECT_ID }}
+        uses: google-github-actions/get-gke-credentials@v1
+        with:
+          cluster_name: ${{ env.CLUSTER_NAME }}
+          location: ${{ env.CLUSTER_ZONE }}
 
       - name: Set up Helm
         uses: azure/setup-helm@v3
+        with:
+          version: v3.13.3
 
-      - name: Deploy with Helm
+      - name: Deploy FleetDM via Helm
         run: |
+          export USE_GKE_GCLOUD_AUTH_PLUGIN=False
           helm upgrade --install fleet ./k8s/fleet-helm \
             --namespace fleet \
             --create-namespace \
