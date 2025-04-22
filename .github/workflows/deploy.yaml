@@ -29,3 +29,4 @@ jobs:
           helm upgrade --install fleet ./k8s/fleet-helm \
             --namespace fleet --create-namespace \
             -f ./k8s/fleet-helm/values/dev.yaml
+#
