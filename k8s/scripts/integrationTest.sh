@@ -2,7 +2,7 @@
 
 set -e
 
-FLEET_URL="http://fleet.34.77.188.249.nip.io"
+FLEET_URL="https://fleet.34.77.188.249.nip.io"
 
 EMAIL="${FLEET_EMAIL}"
 PASSWORD="${FLEET_PASSWORD}"
