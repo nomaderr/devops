@@ -9,7 +9,7 @@ metadata:
     cert-manager.io/cluster-issuer: {{ .Values.ingress.issuer }}
 spec:
   rules:
-    - host: {{ .Values.ingress.hosts[0].host }}
+    - host: {{ (index .Values.ingress.hosts 0).host }}
       http:
         paths:
           - path: /.well-known/acme-challenge/*
