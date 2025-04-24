@@ -22,7 +22,7 @@ spec:
             pathType: {{ .pathType }}
             backend:
               service:
-                name: {{ include "fleet.fullname" $ }}
+                name: fleet
                 port:
                   number: {{ $.Values.service.port }}
           {{- end }}
