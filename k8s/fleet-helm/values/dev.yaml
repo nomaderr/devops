@@ -50,3 +50,9 @@ ingress:
         - path: /
           pathType: Prefix
   tls: [] 
+
+
+secrets:
+  mysql:
+    user: fleet_user
+    password: fleet_pass
