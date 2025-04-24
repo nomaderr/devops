@@ -1,4 +1,6 @@
-namespace: dev
+# values/dev.yaml
+
+namespace: fleet
 
 image:
   repository: fleetdm/fleet
@@ -53,13 +55,12 @@ ingress:
           pathType: Prefix
   tls: [] 
 
-
 secrets:
   mysql:
     name: fleet-mysql-secret
-    userKey: user
-    passwordKey: password
+    userKey: MYSQL_USER
+    passwordKey: MYSQL_PASSWORD
 
 database:
   name: fleet
-  address: mysql:3306
+  address: mysql.fleet.svc.cluster.local:3306
