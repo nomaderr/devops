@@ -1,16 +1,19 @@
-{{- if eq .Values.ingress.issuer "buypass-prod" }}
 apiVersion: cert-manager.io/v1
 kind: ClusterIssuer
 metadata:
-  name: buypass-prod
+  name: {{ .Values.ingress.issuer }}
+  labels:
+    app.kubernetes.io/managed-by: "Helm"
+  annotations:
+    meta.helm.sh/release-name: {{ .Release.Name }}
+    meta.helm.sh/release-namespace: {{ .Release.Namespace }}
 spec:
   acme:
-    email: {{ .Values.ingress.email }}
     server: https://api.buypass.com/acme/directory
+    email: {{ .Values.ingress.email }}
     privateKeySecretRef:
-      name: buypass-prod
+      name: {{ .Values.ingress.issuer }}
     solvers:
-    - http01:
-        ingress:
-          class: nginx
-{{- end }}
+      - http01:
+          ingress:
+            class: {{ .Values.ingress.className }}
