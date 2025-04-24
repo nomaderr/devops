@@ -96,8 +96,8 @@ jobs:
           FLEET_EMAIL: ${{ secrets.FLEET_EMAIL }}
           FLEET_PASSWORD: ${{ secrets.FLEET_PASSWORD }}
         run: |
-          chmod +x ./scripts/integration_test.sh
-          ./scripts/integration_test.sh
+          chmod +x ./scripts/integrationTest.sh
+          ./scripts/integrationTest.sh
       
       - name: Smoke test - check /login
         run: |
