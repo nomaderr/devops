@@ -93,8 +93,8 @@ jobs:
 
       - name: Run Integration Test
         env:
-          FLEET_EMAIL: ${{ secrets.FLEET_EMAIL }}
-          FLEET_PASSWORD: ${{ secrets.FLEET_PASSWORD }}
+          FLEET_EMAIL: ${{ vars.FLEET_EMAIL }}
+          FLEET_PASSWORD: ${{ vars.FLEET_PASSWORD }}
         run: |
           chmod +x ./k8s/scripts/integrationTest.sh
           ./k8s/scripts/integrationTest.sh
