@@ -59,3 +59,8 @@ jobs:
             --namespace fleet \
             --create-namespace \
             -f ./k8s/fleet-helm/values/dev.yaml
+      
+      - name: Smoke test - check /login
+        run: |
+          sleep 10 # Подождать, чтобы Ingress и сервисы успели подняться
+          curl -s -o /dev/null -w "%{http_code}" http://fleet.34.77.188.249.nip.io/login | grep 200
