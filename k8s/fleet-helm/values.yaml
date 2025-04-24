@@ -2,7 +2,7 @@ replicaCount: 1
 
 image:
   # repository: fleetdm/fleet
-  repository: ghcr.io/{{ .Values.image.owner }}/fleetdm
+  repository: ghcr.io/nomaderr/fleetdm
   tag: main-{{ .Chart.AppVersion }}
   pullPolicy: IfNotPresent
 
