@@ -2,7 +2,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: {{ include "fleet.fullname" . }}
+  name: fleet
   namespace: {{ .Release.Namespace }}
   labels:
     app: {{ .Chart.Name }}
