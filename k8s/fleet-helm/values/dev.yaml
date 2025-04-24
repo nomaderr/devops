@@ -114,9 +114,8 @@ fleet:
 ingress:
   enabled: true
   className: nginx
-  issuer: letsencrypt-nip
   annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /
+    cert-manager.io/cluster-issuer: letsencrypt-nip
   hosts:
     - host: fleet.34.77.188.249.nip.io
       paths:
