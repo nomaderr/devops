@@ -130,3 +130,8 @@ secrets:
 database:
   name: fleet
   address: mysql.fleet.svc.cluster.local:3306
+
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 8080
