@@ -23,6 +23,9 @@ spec:
             - containerPort: 8080
           command: ["fleet"]
           args: ["serve"]
+          envFrom:
+            - configMapRef:
+                name: fleet-config
           env:
             - name: FLEET_MYSQL_USERNAME
               valueFrom:
