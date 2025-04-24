@@ -115,7 +115,7 @@ ingress:
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /
   hosts:
-    - host: fleet.34.77.188.249.xip.io
+    - host: fleet.34.77.188.249.nip.io
       paths:
         - path: /
           pathType: Prefix
