@@ -54,5 +54,10 @@ ingress:
 
 secrets:
   mysql:
-    user: fleet_user
-    password: fleet_pass
+    name: fleet-mysql-secret
+    userKey: user
+    passwordKey: password
+
+database:
+  name: fleet
+  address: mysql:3306
