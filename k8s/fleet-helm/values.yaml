@@ -1,8 +1,9 @@
 replicaCount: 1
 
 image:
-  repository: fleetdm/fleet
-  tag: main-{{ .Values.image.commitSha | default "dev" }}
+  # repository: fleetdm/fleet
+  repository: ghcr.io/{{ .Values.image.owner }}/fleetdm
+  tag: HEAD
   pullPolicy: IfNotPresent
 
 service:
