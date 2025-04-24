@@ -90,6 +90,14 @@ jobs:
             -f ./k8s/fleet-helm/values/dev.yaml \
             --set image.repository=ghcr.io/${{ github.repository_owner }}/fleetdm \
             --set image.tag=main-${{ steps.vars.outputs.sha }}
+
+      - name: Run Integration Test
+        env:
+          FLEET_EMAIL: ${{ secrets.FLEET_EMAIL }}
+          FLEET_PASSWORD: ${{ secrets.FLEET_PASSWORD }}
+        run: |
+          chmod +x ./scripts/integration-test.sh
+          ./scripts/integration-test.sh
       
       - name: Smoke test - check /login
         run: |
