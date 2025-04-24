@@ -102,4 +102,4 @@ jobs:
       - name: Smoke test - check /login
         run: |
           sleep 10
-          curl -s -o /dev/null -w "%{http_code}" http://fleet.34.77.188.249.nip.io/login | grep 200
+          curl -s -o /dev/null -w "%{http_code}" https://fleet.34.77.188.249.nip.io/login | grep 200

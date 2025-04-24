@@ -14,12 +14,12 @@ RESPONSE=$(curl -skL -X POST "${FLEET_URL}/api/v1/fleet/login" \
 TOKEN=$(echo "$RESPONSE" | jq -r .token)
 
 if [[ "$TOKEN" == "null" || -z "$TOKEN" ]]; then
-  echo "❌ Failed to authenticate and retrieve token"
+  echo "Failed to authenticate and retrieve token"
   echo "$RESPONSE"
   exit 1
 fi
 
-echo "✅ Token received: ${TOKEN:0:10}..."
+echo "Token received: ${TOKEN:0:10}..."
 
 echo "Requesting enroll secret..."
 SECRET_RESPONSE=$(curl -skL -X GET "${FLEET_URL}/api/v1/fleet/spec/enroll_secret" \
@@ -28,9 +28,9 @@ SECRET_RESPONSE=$(curl -skL -X GET "${FLEET_URL}/api/v1/fleet/spec/enroll_secret
 echo "$SECRET_RESPONSE" | jq .spec.secrets &> /dev/null
 
 if [ $? -ne 0 ]; then
-  echo "❌ Enroll secret not found in response"
+  echo "Enroll secret not found in response"
   echo "$SECRET_RESPONSE"
   exit 1
 fi
 
-echo "✅ Enroll secret present — integration test passed"
+echo "Enroll secret present — integration test passed"
