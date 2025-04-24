@@ -1,4 +1,72 @@
-namespace: dev
+# namespace: dev
+
+# image:
+#   repository: fleetdm/fleet
+#   tag: HEAD
+#   pullPolicy: IfNotPresent
+
+# mysql:
+#   image: mysql:8.0
+#   rootPassword: toor
+#   user: fleet
+#   password: insecure
+#   database: fleet
+#   secretName: fleet-mysql-secret
+#   pvcName: fleet-mysql-pvc
+#   pvc:
+#     size: 1Gi
+
+# redis:
+#   image: redis:5
+
+# fleet:
+#   replicas: 1
+#   serverAddress: "0.0.0.0:8080"
+#   serverTLS: "false"
+#   osqueryTLSDisable: "true"
+#   mdmEnable: "false"
+#   disableUpdates: "true"
+#   appTokenKey: "mytokensecret123456789"
+#   livenessProbe:
+#     tcpSocket:
+#       port: 8080
+#     initialDelaySeconds: 30
+#     periodSeconds: 10
+#   readinessProbe:
+#     httpGet:
+#       path: /login
+#       port: 8080
+#     initialDelaySeconds: 10
+#     periodSeconds: 5
+#     timeoutSeconds: 2
+#     failureThreshold: 3
+
+# ingress:
+#   enabled: true
+#   className: nginx
+#   annotations:
+#     nginx.ingress.kubernetes.io/rewrite-target: /
+#   hosts:
+#     - host: fleet.local
+#       paths:
+#         - path: /
+#           pathType: Prefix
+#   tls: [] 
+
+
+# secrets:
+#   mysql:
+#     name: fleet-mysql-secret
+#     userKey: user
+#     passwordKey: password
+
+# database:
+#   name: fleet
+#   address: mysql:3306
+
+# values/dev.yaml
+
+namespace: fleet
 
 image:
   repository: fleetdm/fleet
@@ -53,14 +121,12 @@ ingress:
           pathType: Prefix
   tls: [] 
 
-
 secrets:
   mysql:
     name: fleet-mysql-secret
-    userKey: user
-    passwordKey: password
+    userKey: MYSQL_USER
+    passwordKey: MYSQL_PASSWORD
 
 database:
   name: fleet
-  address: mysql:3306
-
+  address: mysql.fleet.svc.cluster.local:3306
