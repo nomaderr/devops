@@ -8,7 +8,7 @@ metadata:
     kubernetes.io/ingress.class: {{ .Values.ingress.className | quote }}
 spec:
   rules:
-    - host: {{ .Values.ingress.hosts | first | indent 6 | trim }}
+    - host: {{ (index .Values.ingress.hosts 0).host | quote }}
       http:
         paths:
           - path: /.well-known/acme-challenge/*
