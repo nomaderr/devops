@@ -23,8 +23,8 @@ spec:
     - ReadWriteOnce
   resources:
     requests:
-      storage: {{ .Values.mysql.storage }}
-
+      storage: {{ .Values.mysql.pvc.size }}
+      
 ---
 apiVersion: v1
 kind: Service
