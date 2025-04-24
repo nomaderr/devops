@@ -27,12 +27,12 @@ spec:
             - name: FLEET_MYSQL_USERNAME
               valueFrom:
                 secretKeyRef:
-                  name: mysql-secret
+                  name: {{ .Values.mysql.secretName }}
                   key: MYSQL_USER
             - name: FLEET_MYSQL_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: mysql-secret
+                  name: {{ .Values.mysql.secretName }}
                   key: MYSQL_PASSWORD
             - name: FLEET_MYSQL_DATABASE
               value: {{ .Values.env.FLEET_MYSQL_DATABASE }}
