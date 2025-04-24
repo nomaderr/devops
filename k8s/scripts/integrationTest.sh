@@ -19,7 +19,7 @@ fi
 
 echo "Token received"
 
-echo "📡 Requesting enroll secret"
+echo "Requesting enroll secret"
 RESPONSE=$(curl -s -X GET "${FLEET_URL}/api/v1/fleet/spec/enroll_secret" \
   -H "Authorization: Bearer $TOKEN")
 
