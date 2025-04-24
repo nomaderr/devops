@@ -10,17 +10,28 @@ metadata:
     {{- if .Values.ingress.className }}
     kubernetes.io/ingress.class: {{ .Values.ingress.className }}
     {{- end }}
-    nginx.ingress.kubernetes.io/rewrite-target: /
+    {{- with .Values.ingress.annotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
 spec:
+  ingressClassName: {{ .Values.ingress.className }}
   rules:
-    - host: {{ .Values.ingress.host }}
+    {{- range .Values.ingress.hosts }}
+    - host: {{ .host }}
       http:
         paths:
-          - path: /
-            pathType: Prefix
+          {{- range .paths }}
+          - path: {{ .path }}
+            pathType: {{ .pathType }}
             backend:
               service:
-                name: {{ .Release.Name }}
+                name: {{ $.Release.Name }}
                 port:
                   number: 80
+          {{- end }}
+    {{- end }}
+  {{- if .Values.ingress.tls }}
+  tls:
+    {{- toYaml .Values.ingress.tls | nindent 4 }}
+  {{- end }}
 {{- end }}
