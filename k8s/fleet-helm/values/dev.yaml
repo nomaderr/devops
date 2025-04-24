@@ -11,6 +11,8 @@ mysql:
   user: fleet
   password: insecure
   database: fleet
+  secretName: fleet-mysql-secret
+  pvcName: fleet-mysql-pvc
   pvc:
     size: 1Gi
 
