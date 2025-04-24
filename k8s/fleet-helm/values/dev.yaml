@@ -116,12 +116,16 @@ ingress:
   className: nginx
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /
+    cert-manager.io/cluster-issuer: letsencrypt-nip
   hosts:
     - host: fleet.34.77.188.249.nip.io
       paths:
         - path: /
           pathType: Prefix
-  tls: [] 
+  tls:
+    - hosts:
+        - fleet.34.77.188.249.nip.io
+      secretName: fleet-tls
 
 secrets:
   mysql:
