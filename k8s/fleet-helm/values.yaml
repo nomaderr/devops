@@ -2,7 +2,7 @@ replicaCount: 1
 
 image:
   repository: fleetdm/fleet
-  tag: HEAD
+  tag: main-{{ .Values.image.commitSha | default "dev" }}
   pullPolicy: IfNotPresent
 
 service:

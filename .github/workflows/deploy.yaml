@@ -52,15 +52,28 @@ jobs:
           helm lint ./k8s/fleet-helm \
             --values ./k8s/fleet-helm/values/dev.yaml
 
+      # - name: Deploy FleetDM via Helm
+      #   run: |
+      #     export USE_GKE_GCLOUD_AUTH_PLUGIN=False
+      #     helm upgrade --install fleet ./k8s/fleet-helm \
+      #       --namespace fleet \
+      #       --create-namespace \
+      #       -f ./k8s/fleet-helm/values/dev.yaml
+
+      - name: Get short SHA
+        id: vars
+        run: echo "sha=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+
       - name: Deploy FleetDM via Helm
         run: |
           export USE_GKE_GCLOUD_AUTH_PLUGIN=False
           helm upgrade --install fleet ./k8s/fleet-helm \
             --namespace fleet \
             --create-namespace \
-            -f ./k8s/fleet-helm/values/dev.yaml
+            -f ./k8s/fleet-helm/values/dev.yaml \
+            --set image.tag=main-${{ steps.vars.outputs.sha }}
       
       - name: Smoke test - check /login
         run: |
-          sleep 10 # Подождать, чтобы Ingress и сервисы успели подняться
+          sleep 10
           curl -s -o /dev/null -w "%{http_code}" http://fleet.34.77.188.249.nip.io/login | grep 200
