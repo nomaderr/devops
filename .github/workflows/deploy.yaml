@@ -64,12 +64,8 @@ jobs:
         id: vars
         run: echo "sha=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
 
-      - name: Log in to GitHub Container Registry
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Login to GitHub Container Registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
       - name: Retag and push fleet image to GHCR
         run: |
