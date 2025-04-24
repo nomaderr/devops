@@ -112,10 +112,12 @@ fleet:
     failureThreshold: 3
 
 ingress:
+  issuer: buypass-prod
+  email: test@gmail.com
   enabled: true
   className: nginx
   annotations:
-    cert-manager.io/cluster-issuer: letsencrypt-nip
+    cert-manager.io/cluster-issuer: buypass-prod
   hosts:
     - host: fleet.34.77.188.249.nip.io
       paths:
