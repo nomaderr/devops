@@ -64,6 +64,10 @@ jobs:
         id: vars
         run: echo "sha=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
 
+      - name: Delete existing DB init job if exists
+        run: |
+          kubectl delete job fleet-db-init -n fleet --ignore-not-found
+
       - name: Deploy FleetDM via Helm
         run: |
           export USE_GKE_GCLOUD_AUTH_PLUGIN=False
