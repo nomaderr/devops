@@ -69,8 +69,10 @@
 namespace: fleet
 
 image:
-  repository: fleetdm/fleet
-  tag: HEAD
+  # repository: fleetdm/fleet
+  # tag: HEAD
+  repository: ghcr.io/{{ .Values.image.owner }}/fleetdm
+  tag: main-{{ .Chart.AppVersion }}
   pullPolicy: IfNotPresent
 
 mysql:
