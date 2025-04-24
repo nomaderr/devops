@@ -70,7 +70,7 @@ namespace: fleet
 
 image:
   repository: fleetdm/fleet
-  tag: HEAD
+  tag: main-{{ .Values.image.commitSha | default "dev" }}
   pullPolicy: IfNotPresent
 
 mysql:
