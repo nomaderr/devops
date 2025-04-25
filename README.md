@@ -73,8 +73,9 @@ readinessProbe:
 
 ```
 ```
-Liveness:       tcp-socket :8080 delay=30s timeout=1s period=10s #success=1 #failure=3
-Readiness:      http-get http://:8080/login delay=10s timeout=2s period=5s #success=1 #failure=3
+Container: fleet
+Liveness Probe: {"failureThreshold":3,"initialDelaySeconds":30,"periodSeconds":10,"successThreshold":1,"tcpSocket":{"port":8080},"timeoutSeconds":1}
+Readiness Probe: {"failureThreshold":3,"httpGet":{"path":"/login","port":8080,"scheme":"HTTP"},"initialDelaySeconds":10,"periodSeconds":5,"successThreshold":1,"timeoutSeconds":2}
 Ready:          True
 ContainersReady: True
 ```
