@@ -5,7 +5,7 @@
 ## Target Application
 
 FleetDM was selected as the target application for this demo.
-Here in K8s foler you can find both Helm chart template and manifests for bare metal setup
+Here in K8s foler you can find Helm chart template and other for deployment
 
 ## Deployment Environment
 
