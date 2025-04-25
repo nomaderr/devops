@@ -34,8 +34,10 @@ FleetDM was selected as the target application for this demo.
 
 ---
 
-### Secrets and Configs
+### Necessary environment variables, configurations, and secrets (e.g., database credentials, API keys) are properly managed via K8s and Github secrets and vars
 
+### Secrets and Configs
+- Ci/CD environment variables and secrets are stored in Github.
 - Sensitive environment variables are stored in **Kubernetes Secrets**.
 - App-level non-sensitive configs are handled via **ConfigMap** (`fleet-config`).
 
@@ -46,6 +48,59 @@ FleetDM was selected as the target application for this demo.
 - Ingress is configured via **NGINX Ingress Controller**.
 - TLS is provided by **CertManager + Buypass Go SSL**.
 - Public access is available at:
+- https://fleet.34.77.188.249.nip.io/login
+
+
+## Health Checks
+
+The following health probes are defined in the FleetDM deployment for proper readiness and liveness checks:
+
+```yaml
+livenessProbe:
+  tcpSocket:
+    port: 8080
+  initialDelaySeconds: 30
+  periodSeconds: 10
+
+readinessProbe:
+  httpGet:
+    path: /login
+    port: 8080
+  initialDelaySeconds: 10
+  periodSeconds: 5
+  timeoutSeconds: 2
+  failureThreshold: 3
+
+```
+```
+Liveness:       tcp-socket :8080 delay=30s timeout=1s period=10s #success=1 #failure=3
+Readiness:      http-get http://:8080/login delay=10s timeout=2s period=5s #success=1 #failure=3
+Ready:          True
+ContainersReady: True
+```
+These checks ensure FleetDM pods are only marked as "Ready" when the UI/API is responsive.
+
+## API Access Example
+
+```
+curl -skL -X POST https://fleet.34.77.188.249.nip.io/api/v1/fleet/login \
+  -H "Content-Type: application/json" \
+  -d '{"email":"email", "password":"yourpassword"}' | jq .
+```
+```
+curl -X GET https://fleet.34.77.188.249.nip.io/api/v1/fleet/spec/enroll_secret \
+  -H "Authorization: Bearer <your_token>"
+```
+
+## UI Smoke Test
+- curl -i https://fleet.34.77.188.249.nip.io/login
+```
+HTTP/1.1 200 OK
+Content-Type: text/html; charset=utf-8
+Strict-Transport-Security: max-age=31536000; includeSubDomains;
+...
+```
+A 200 OK response means the FleetDM web interface is up and responding properly.
 
 ## CI/CD Pipeline
 
@@ -67,5 +122,6 @@ A full-fledged CI/CD pipeline is implemented using **GitHub Actions**:
 
 ## ArgoCD Integration
 - ArgoCD is used to synchronize Helm charts.
+- https://34.140.38.100/login?return_url=https%3A%2F%2F34.140.38.100%2Fapplications
 
 ## Testing & Observability
