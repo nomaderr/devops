@@ -3,7 +3,8 @@ replicaCount: 1
 image:
   # repository: fleetdm/fleet
   repository: ghcr.io/nomaderr/fleetdm
-  tag: main-{{ .Chart.AppVersion }}
+  # tag: main-{{ .Chart.AppVersion }}
+  tag: ""
   pullPolicy: IfNotPresent
 
 service:
