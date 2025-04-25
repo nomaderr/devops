@@ -77,9 +77,9 @@ jobs:
           docker tag fleetdm/fleet:HEAD $IMAGE_NAME:$IMAGE_TAG
           docker push $IMAGE_NAME:$IMAGE_TAG
 
-      - name: Delete existing DB init job if exists
-        run: |
-          kubectl delete job fleet-db-init -n fleet --ignore-not-found
+      # - name: Delete existing DB init job if exists
+      #   run: |
+      #     kubectl delete job fleet-db-init -n fleet --ignore-not-found
 
       - name: Deploy FleetDM via Helm
         run: |
