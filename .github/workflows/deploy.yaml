@@ -97,15 +97,15 @@ jobs:
       - name: Deploy FleetDM via Helm
         run: |
           export USE_GKE_GCLOUD_AUTH_PLUGIN=False
-          IMAGE_TAG=main-${{ steps.vars.outputs.sha }}
+          IMAGE_TAG="main-${{ steps.vars.outputs.sha }}"
           helm upgrade --install fleet ./k8s/fleet-helm \
             --namespace fleet \
             --create-namespace \
             -f ./k8s/fleet-helm/values/dev.yaml \
-            --set image.repository=ghcr.io/${{ github.repository_owner }}/fleetdm \
-            --set image.tag=$IMAGE_TAG \
-            --set jobImage.repository=ghcr.io/${{ github.repository_owner }}/fleetdm \
-            --set jobImage.tag=$IMAGE_TAG
+            --set image.repository="ghcr.io/${{ github.repository_owner }}/fleetdm" \
+            --set image.tag="$IMAGE_TAG" \
+            --set jobImage.repository="ghcr.io/${{ github.repository_owner }}/fleetdm" \
+            --set jobImage.tag="$IMAGE_TAG"
 
       - name: Run Integration Test
         env:
