@@ -72,7 +72,7 @@ image:
   # repository: fleetdm/fleet
   # tag: HEAD
   repository: ghcr.io/nomaderr/fleetdm
-  tag: main-24fce3d
+  # tag: main-24fce3d
   pullPolicy: IfNotPresent
 
 mysql:
