@@ -7,7 +7,7 @@ metadata:
     app: {{ .Release.Name }}
   annotations:
     "helm.sh/hook": pre-install,pre-upgrade
-    "helm.sh/hook-delete-policy": before-hook-creation
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
     # "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
 spec:
   template:
@@ -18,8 +18,8 @@ spec:
       restartPolicy: OnFailure
       containers:
         - name: fleet-init
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-          # image: "{{ .Values.image.repository }}{{- if .Values.image.tag }}:{{ .Values.image.tag }}{{- end }}"
+          # image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          image: "{{ .Values.image.repository }}{{- if .Values.image.tag }}:{{ .Values.image.tag }}{{- end }}"
           command: ["fleet", "prepare", "db"]
           env:
             - name: FLEET_MYSQL_USERNAME
