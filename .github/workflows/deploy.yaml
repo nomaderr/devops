@@ -97,7 +97,7 @@ jobs:
       - name: Deploy FleetDM via Helm
         run: |
           export USE_GKE_GCLOUD_AUTH_PLUGIN=False
-          IMAGE_TAG="main-${{ steps.vars.outputs.sha }}"
+          export IMAGE_TAG="main-${{ steps.vars.outputs.sha }}"
           helm upgrade --install fleet ./k8s/fleet-helm \
             --namespace fleet \
             --create-namespace \

@@ -7,6 +7,10 @@ image:
   tag: ""
   pullPolicy: IfNotPresent
 
+jobImage:
+  repository: ghcr.io/nomaderr/fleetdm
+  tag: ""
+
 service:
   type: ClusterIP
   port: 80
