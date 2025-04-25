@@ -65,8 +65,8 @@ jobs:
         id: vars
         run: echo "sha=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
 
-      - name: Print Image Tag
-        run: echo "Using image tag: main-${{ steps.vars.outputs.sha }}"
+      # - name: Print Image Tag
+      #   run: echo "Using image tag: main-${{ steps.vars.outputs.sha }}"
 
       - name: Login to GitHub Container Registry
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
