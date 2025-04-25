@@ -18,7 +18,7 @@ spec:
       restartPolicy: OnFailure
       containers:
         - name: fleet-init
-          image: "{{ .Values.image.repository }}:main-{{ .Chart.AppVersion }}"
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           command: ["fleet", "prepare", "db"]
           env:
             - name: FLEET_MYSQL_USERNAME
