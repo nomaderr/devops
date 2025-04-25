@@ -166,6 +166,7 @@ https://github.com/nomaderr/devops/actions
 ## ArgoCD Integration
 - ArgoCD is used to synchronize Helm charts.
 - https://34.140.38.100/login?return_url=https%3A%2F%2F34.140.38.100%2Fapplications
+![ArgoCD](k8s/images/fleet.jpg)
 ---
 ## Testing & Observability
 - Smoke test included in pipeline and integrationTest.sh present in scipts folder
